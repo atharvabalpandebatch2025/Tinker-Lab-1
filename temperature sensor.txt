@@ -1,0 +1,29 @@
+const int tempPin = A0;     // TMP36 output connected to A0
+const int ledPin =7;       // LED connected to PWM pin 9
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int analogValue = analogRead(tempPin);
+
+  // Convert analog value to temperature in Celsius
+  float voltage = analogValue * (5.0 / 1023.0);
+  float temperatureC = (voltage - 0.5) * 100.0;
+
+  // Map temperature to PWM brightness (0–255)
+  int brightness = map((int)temperatureC, 20, 40, 0, 255);
+  brightness = constrain(brightness, 0, 255); // Ensure within bounds
+
+  analogWrite(ledPin, brightness);
+
+  // Debug output
+  Serial.print("Temperature: ");
+  Serial.print(temperatureC);
+  Serial.print(" °C, Brightness: ");
+  Serial.println(brightness);
+
+  delay(500);
+}
